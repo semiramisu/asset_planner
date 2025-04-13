@@ -1,0 +1,15 @@
+{
+    "years": 30,
+    "monthly_stock_man": 15.0,
+    "monthly_bond_man": 10.0,
+    "monthly_savings_man": 0.8,
+    "stock_return_percent": 5.0,
+    "bond_return_percent": 1.0,
+    "savings_return_percent": 0.1,
+    "initial_stock_man": 0.0,
+    "initial_bond_man": 0.0,
+    "initial_savings_man": 0.0,
+    "current_stock_man": 0.0,
+    "current_bond_man": 0.0,
+    "current_savings_man": 0.0
+}
