@@ -1,9 +1,9 @@
 import os
 import json
-import subprocess
 import sys
+import importlib
 
-# 必要なパッケージの確認とインストール
+# パッケージのインポートを試みる、ローカル実行時のみ必要に応じてインストール
 required_packages = [
     "streamlit",
     "pandas",
@@ -14,9 +14,15 @@ required_packages = [
 ]
 
 def install_missing_packages():
+    """ローカル環境でのみ実行され、不足パッケージをインストールする"""
+    # Streamlit Cloud環境ではスキップ
+    if os.environ.get('STREAMLIT_SHARING') or os.environ.get('IS_STREAMLIT_CLOUD'):
+        return
+    
+    import subprocess
     for package in required_packages:
         try:
-            __import__(package)
+            importlib.import_module(package)
         except ImportError:
             print(f"{package} がインストールされていません。インストールします...")
             subprocess.check_call([sys.executable, "-m", "pip", "install", package])
@@ -25,13 +31,37 @@ def install_missing_packages():
 # パッケージのインストールを確認
 install_missing_packages()
 
-# 依存パッケージのインポート
-import streamlit as st
-import pandas as pd
-import numpy as np
-import datetime
-import calendar
+# 以下、通常のインポート...
 
+# パッケージのインポート部分
+try:
+    import streamlit as st
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import japanize_matplotlib
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    import datetime
+    import calendar
+except ImportError as e:
+    import streamlit as st
+    st.error(f"""
+    ## パッケージのインポートエラー
+    必要なパッケージが見つかりません: {str(e)}
+    
+    このアプリを実行するには以下のパッケージが必要です:
+    - streamlit
+    - pandas
+    - numpy
+    - matplotlib
+    - japanize_matplotlib
+    - plotly
+    
+    ローカルで実行する場合は、`pip install <パッケージ名>` でインストールしてください。
+    """)
+    st.stop()
+    
 # 自作モジュールのインポート
 from utils import (
     convert_to_yen, format_japanese_yen, 
