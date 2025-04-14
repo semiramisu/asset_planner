@@ -273,10 +273,10 @@ def run_simulation(data):
     
     # 運用シミュレーション
     for i in range(1, months + 1):
-        # 毎月の積立額も当月の利回りを享受する計算方法に修正
-        df.loc[i, '株式'] = (df.loc[i-1, '株式'] + data['monthly_stock']) * (1 + data['stock_return']/12)
-        df.loc[i, '債券'] = (df.loc[i-1, '債券'] + data['monthly_bond']) * (1 + data['bond_return']/12)
-        df.loc[i, '預金'] = (df.loc[i-1, '預金'] + data['monthly_savings']) * (1 + data['savings_return']/12)
+        # 前月の資産に利回りを適用（月次）
+        df.loc[i, '株式'] = df.loc[i-1, '株式'] * (1 + data['stock_return']/12) + data['monthly_stock']
+        df.loc[i, '債券'] = df.loc[i-1, '債券'] * (1 + data['bond_return']/12) + data['monthly_bond']
+        df.loc[i, '預金'] = df.loc[i-1, '預金'] * (1 + data['savings_return']/12) + data['monthly_savings']
         df.loc[i, '総資産'] = df.loc[i, '株式'] + df.loc[i, '債券'] + df.loc[i, '預金']
         
         # 積立合計額の累計
